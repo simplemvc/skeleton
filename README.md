@@ -1,33 +1,11 @@
-## SimpleMVC
+## Skeleton application for SimpleMVC
 
 [![Build status](https://github.com/simplemvc/skeleton/workflows/PHP%20test/badge.svg)](https://github.com/ezimuel/SimpleMVC/actions)
 
-**SimpleMVC** is a micro MVC framework for PHP based on the [KISS](https://en.wikipedia.org/wiki/KISS_principle) principle:
-> "Keep It Simple, Stupid"
-
-The goal of this project is to offer a simple and fast [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
-framework for PHP applications.
-
-It uses the [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) pattern to manage
-the dependencies between classes and the [FastRoute](https://github.com/nikic/FastRoute) library
-as routing system.
-
-SimpleMVC uses the following PSR standards, from the [PHP-FIG](https://www.php-fig.org/) initiative:
-
-- [PSR-11](https://www.php-fig.org/psr/psr-11/) for DI Container;
-- [PSR-7](https://www.php-fig.org/psr/psr-7/) for HTTP message;
-- [PSR-3](https://www.php-fig.org/psr/psr-3/) for logging;
-
-This project is born as educational library for the course **PHP Programming** by [Enrico Zimuel](https://www.zimuel.it/)
-at [ITS ICT Piemonte](http://www.its-ictpiemonte.it/) in Italy.
-
-Since than, the project has been evoluted and it has been used also for building web application
-in production. We decided to create a more general purpose project and this was the beginning
-of this repository.
-
+This is a skeleton web application for [SimpleMVC](https://github.com/simplemvc/framework) framework.
 ## Quickstart
 
-You can install a SimpleMVC skeleton application using the following command:
+You can install the skeleton application using the following command:
 
 ```
 composer create-project simplemvc/skeleton
