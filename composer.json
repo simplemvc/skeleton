@@ -10,9 +10,6 @@
         "skeleton"
     ],
     "license": "MIT",
-    "repositories": [
-        { "type": "vcs", "url": "https://github.com/simplemvc/framework" }
-    ],
     "require": {
         "php": "^7.4 || ^8.0",
         "php-di/php-di": "^6.0",
