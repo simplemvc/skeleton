@@ -14,7 +14,7 @@
         "php": "^7.4 || ^8.0",
         "php-di/php-di": "^6.0",
         "league/plates": "^3.4",
-        "simplemvc/framework": "dev-main"
+        "simplemvc/framework": "^0.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.7",
