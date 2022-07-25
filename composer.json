@@ -1,0 +1,41 @@
+{
+    "name": "simplemvc/skeleton",
+    "type": "project",
+    "description": "A skeleton application using SimpleMVC framework",
+    "keywords": [
+        "framework",
+        "simple",
+        "mvc",
+        "psr-7",
+        "skeleton"
+    ],
+    "license": "MIT",
+    "repositories": [
+        { "type": "vcs", "url": "https://github.com/simplemvc/framework" }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "php-di/php-di": "^6.0",
+        "league/plates": "^3.4",
+        "simplemvc/framework": "dev-main"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.7",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Test\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --colors=always",
+        "test-coverage": "vendor/bin/phpunit --colors=always --coverage-clover clover.xml",
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon"
+    }
+}
