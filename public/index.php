@@ -17,14 +17,9 @@ use SimpleMVC\Emitter\SapiEmitter;
 
 $builder = new ContainerBuilder();
 $builder->addDefinitions('config/container.php');
-$container = $builder->build();
 
-// Store the configuration file in the container
-$config = require 'config/app.php';
-$container->set('config', $config);
-
-$app = new App($container, $config);
+$app = new App($builder->build());
 $app->bootstrap();
-$response = $app->dispatch(); // PSR-7 response
-
+$request = App::buildRequestFromGlobals();
+$response = $app->dispatch($request);
 SapiEmitter::emit($response);

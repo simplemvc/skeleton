@@ -14,7 +14,8 @@
         "php": "^7.4 || ^8.0",
         "php-di/php-di": "^6.0",
         "league/plates": "^3.4",
-        "simplemvc/framework": "^0.1"
+        "simplemvc/framework": "^0.3",
+        "monolog/monolog": "^2.8"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.7",
@@ -33,6 +34,8 @@
     "scripts": {
         "test": "vendor/bin/phpunit --colors=always",
         "test-coverage": "vendor/bin/phpunit --colors=always --coverage-clover clover.xml",
-        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon"
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon",
+        "start": ["Composer\\Config::disableProcessTimeout", "php -S 0.0.0.0:8080 -t public"],
+        "clean": ["rm data/cache/route.cache"]
     }
 }
