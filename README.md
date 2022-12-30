@@ -1,6 +1,6 @@
 ## Skeleton application for SimpleMVC
 
-[![Build status](https://github.com/simplemvc/skeleton/workflows/PHP%20test/badge.svg)](https://github.com/ezimuel/SimpleMVC/actions)
+[![Build status](https://github.com/simplemvc/skeleton/workflows/PHP%20test/badge.svg)](https://github.com/simplemvc/skeleton/actions)
 
 This is a skeleton web application for [SimpleMVC](https://github.com/simplemvc/framework) framework.
 ## Quickstart
