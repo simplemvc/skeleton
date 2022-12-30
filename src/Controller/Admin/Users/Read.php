@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin\Users;
 
+use App\Config\Route;
 use App\Exception\DatabaseException;
 use App\Service\Users as ServiceUsers;
 use League\Plates\Engine;

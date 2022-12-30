@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Config\Route;
 use App\Exception\DatabaseException;
 use App\Service\Auth;
 use App\Service\Users;
@@ -43,7 +44,7 @@ class Login implements ControllerInterface
         return new Response(
             200, 
             [], 
-            $this->plates->render('login')
+            $this->plates->render('login', ['login_url' => Route::LOGIN])
         );
     }
 
@@ -61,7 +62,10 @@ class Login implements ControllerInterface
             return new Response(
                 400, 
                 [], 
-                $this->plates->render('login', ['error' => 'Invalid credentials'])
+                $this->plates->render('login', [
+                    'error' => 'Invalid credentials',
+                    'login_url' => Route::LOGIN
+                ])
             );
         }
         $_SESSION['username'] = $username;
@@ -74,7 +78,7 @@ class Login implements ControllerInterface
         // Redirect to ADMIN_URL
         return new Response(
             303,
-            ['Location' => DASHBOARD_URL]
+            ['Location' => Route::DASHBOARD]
         );
     }
 }

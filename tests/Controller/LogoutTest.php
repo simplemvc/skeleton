@@ -3,14 +3,27 @@ declare(strict_types=1);
 
 namespace SimpleMVC\Test\Controller;
 
+use App\Config\Route;
 use App\Controller\Logout;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 final class LogoutTest extends TestCase
 {
+    /** @var ServerRequestInterface|MockObject */
+    private $request;
+
+    /** @var ResponseInterface|MockObject */
+    private $response;
+
+    private Logout $logout;
+
+    private LoggerInterface $logger;
+
     public function setUp(): void
     {
         $this->logger = new NullLogger();
@@ -18,9 +31,6 @@ final class LogoutTest extends TestCase
 
         $this->request = $this->createMock(ServerRequestInterface::class);
         $this->response = $this->createMock(ResponseInterface::class);
-
-        // required for the URL constants
-        require_once __DIR__ . '/../../config/url_constants.php';
     }
 
     public function testLogout(): void
@@ -30,6 +40,6 @@ final class LogoutTest extends TestCase
 
         $this->assertEmpty($_SESSION);
         $this->assertEquals(303, $response->getStatusCode());
-        $this->assertEquals(LOGIN_URL, $response->getHeader('Location')[0]);
+        $this->assertEquals(Route::LOGIN, $response->getHeader('Location')[0]);
     }
 }

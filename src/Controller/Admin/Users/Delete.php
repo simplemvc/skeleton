@@ -12,7 +12,6 @@ namespace App\Controller\Admin\Users;
 
 use App\Exception\DatabaseException;
 use App\Service\Users as ServiceUsers;
-use League\Plates\Engine;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,12 +19,10 @@ use SimpleMVC\Controller\ControllerInterface;
 
 class Delete implements ControllerInterface
 {
-    protected Engine $plates;
     protected ServiceUsers $users;
 
-    public function __construct(Engine $plates, ServiceUsers $users)
+    public function __construct(ServiceUsers $users)
     {
-        $this->plates = $plates;
         $this->users = $users;
     }
 

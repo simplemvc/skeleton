@@ -1,4 +1,4 @@
-<?php $this->layout('admin::admin-layout', ['title' => 'Admin - User']) ?>
+<?php $this->layout('admin::admin-layout', ['title' => 'Admin - Edit User']) ?>
 
 <h2>Edit User</h2>
 <form action="/admin/users/<?= $this->e($user->id)?>" method="POST">

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Config\Route;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,7 +39,7 @@ class Logout implements ControllerInterface
         $_SESSION = [];
         return new Response(
             303,
-            ['Location' => LOGIN_URL]
+            ['Location' => Route::LOGIN]
         );
     }
 }

@@ -1,7 +1,7 @@
 <?php $this->layout('layout', ['title' => 'Login']) ?>
 
 <main class="form-signin">
-  <form method="POST" action="<?= LOGIN_URL ?>">
+  <form method="POST" action="<?= $this->e($login_url) ?>">
     <img class="mb-4" src="/img/logo.png" alt="" width="100%">
 
     <div class="form-floating">

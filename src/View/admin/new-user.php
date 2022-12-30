@@ -1,4 +1,4 @@
-<?php $this->layout('admin::admin-layout', ['title' => 'Admin - User']) ?>
+<?php $this->layout('admin::admin-layout', ['title' => 'Admin - New User']) ?>
 
 <h2>New User</h2>
 <form action="/admin/users" method="POST">

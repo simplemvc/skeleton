@@ -16,8 +16,8 @@
     </button>
     <div class="navbar-nav">
         <div class="nav-item text-nowrap" style="color:white">
-            <i class="bi bi-person-circle"></i> <?= $_SESSION['username'] ?> 
-            <a class="no-underline px-3" href="<?= LOGOUT_URL ?>">Logout</a>
+            <i class="bi bi-person-circle"></i> <?= $this->e($_SESSION['username']) ?> 
+            <a class="no-underline px-3" href="<?= $this->e(App\Config\Route::LOGOUT) ?>">Logout</a>
         </div>
     </div>
     </header>

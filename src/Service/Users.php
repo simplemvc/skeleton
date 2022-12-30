@@ -67,7 +67,7 @@ class Users
             throw new DatabaseException(sprintf(
                 "Cannot delete ID %d: %s",
                 $id,
-                implode(',', $this->pdo->errorInfo)
+                implode(',', $this->pdo->errorInfo())
             ));
         }
     }
@@ -109,7 +109,7 @@ class Users
             throw new DatabaseException(sprintf(
                 "Cannot add username %s: %s",
                 $username,
-                implode(',', $this->pdo->errorInfo)
+                implode(',', $this->pdo->errorInfo())
             ));
         }
     }
@@ -132,7 +132,7 @@ class Users
             throw new DatabaseException(sprintf(
                 "Cannot update user id %d: %s",
                 $id,
-                implode(',', $this->pdo->errorInfo)
+                implode(',', $this->pdo->errorInfo())
             ));
         }
     }

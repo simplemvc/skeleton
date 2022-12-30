@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin\Users;
 
+use App\Config\Route;
 use App\Exception\DatabaseException;
 use App\Model\User;
 use App\Service\Users as ServiceUsers;
@@ -76,6 +77,8 @@ class Update implements ControllerInterface
 
     /**
      * Check the parameters and returns errors if any
+     * 
+     * @return array<string, array<string, string>>
      */
     private function checkParams(string $password, string $confirmPassword): array
     {

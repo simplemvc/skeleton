@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin\Users;
 
+use App\Config\Route;
 use App\Exception\DatabaseException;
 use App\Model\User;
 use App\Service\Users;
@@ -60,7 +61,7 @@ class Create implements ControllerInterface
         try {
             $this->users->create($username, $password);
             return new Response(
-                200,
+                201,
                 [],
                 $this->plates->render('admin::new-user', [
                     'result' => sprintf("The user %s has been successfully created!", $username)
@@ -78,6 +79,9 @@ class Create implements ControllerInterface
         }
     }
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     private function validateParams(string $username, string $password, string $confirmPassword): array
     {
         if (empty($username)) {
@@ -104,7 +108,7 @@ class Create implements ControllerInterface
         if (strlen($password) < User::MIN_PASSWORD_LENGHT) {
             return [
                 'formErrors' => [
-                    'password' => 'The password must be at least 10 characters long'
+                    'password' => sprintf("The password must be at least %d characters long", User::MIN_PASSWORD_LENGHT)
                 ]
             ];
         }

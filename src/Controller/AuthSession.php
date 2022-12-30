@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Config\Route;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SimpleMVC\Controller\ControllerInterface;
@@ -22,7 +23,7 @@ class AuthSession implements ControllerInterface
         if (!isset($_SESSION['username'])) {
             return new HaltResponse(
                 303,
-                ['Location' => LOGIN_URL]
+                ['Location' => Route::LOGIN]
             );
         }
         return $response;

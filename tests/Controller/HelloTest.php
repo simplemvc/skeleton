@@ -12,7 +12,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 final class HelloTest extends TestCase
 {
-   
     /** @var ServerRequestInterface|MockObject */
     private $request;
 

@@ -8,12 +8,14 @@
  */
 declare(strict_types=1);
 
+use App\Config\Route;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
+
 return [
     'routing' => [
-        'routes' => require __DIR__ . '/route.php',
+        'routes' => Route::getRoutes(),
         'cache' => 'data/cache/route.cache'
     ],
     'database' => [
