@@ -201,10 +201,4 @@ final class CreateTest extends TestCase
             (string) $response->getBody()
         );   
     }
-
-    public function testDeleteDatabaseException(): void
-    {
-
-    }
-
 }

@@ -82,9 +82,6 @@ class Update implements ControllerInterface
      */
     private function checkParams(string $password, string $confirmPassword): array
     {
-        if (empty($password) && empty($confirmPassword)) {
-            return [];
-        }
         if (strlen($password) < User::MIN_PASSWORD_LENGHT) {
             return [
                 'formErrors' => [

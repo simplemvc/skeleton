@@ -64,7 +64,7 @@ class Read implements ControllerInterface
             // @todo log the user does not exist
             return new HaltResponse(
                 303,
-                ['Location' => '/admin/user']
+                ['Location' => Route::DASHBOARD]
             );  
         }
     }

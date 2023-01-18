@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SimpleMVC\Test\Controller\Admin;
 
 use App\Controller\Admin\Users\Delete;
+use App\Exception\DatabaseException;
 use App\Service\Users;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -54,11 +55,36 @@ final class DeleteTest extends TestCase
 
     public function testDeleteSuccess(): void
     {
-        
+        $this->request->method('getAttribute')
+            ->willReturn(1); // User id
+
+        $this->users->method('getTotalUsers')
+            ->willReturn(2);
+
+        $response = $this->delete->execute($this->request, $this->response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(
+            json_encode(['result' => 'ok']), 
+            (string) $response->getBody()
+        );
     }
 
     public function testDeleteDatabaseException(): void
     {
-        
+        $this->request->method('getAttribute')
+            ->willReturn(100); // User id
+
+        $this->users->method('getTotalUsers')
+            ->willReturn(2);
+
+        $this->users->method('delete')
+            ->willThrowException(new DatabaseException);
+
+        $response = $this->delete->execute($this->request, $this->response);
+        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(
+            json_encode(['error' => 'The user ID 100 does not exist']), 
+            (string) $response->getBody()
+        );
     }
 }
