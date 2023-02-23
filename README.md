@@ -100,6 +100,39 @@ The controller class can be specified also with a pipeline of controllers, as ar
 For instance, the `GET /admin/users[/{id}]` route has a pipeline with `[Controller\AuthSession, Admin\Users\Read]`.
 The controllers in the pipeline are executed in order, that means first `Controller\AuthSession` and last `Admin\Users\Read`.
 
+## Routing cache
+
+The configuration of the skeleton application enables a caching folder for the routes.
+
+```php
+return [
+    'routing' => [
+        'routes' => Route::getRoutes(),
+        'cache' => 'data/cache/route.cache'
+    ],
+    // ...
+]
+```
+
+Every time you change a route, you need to clean the cache using the following command:
+
+```
+composer run-script clean
+```
+
+If you want to disable the cache you can just comment (or delete) the key from
+the configuration array, as follows:
+
+```php
+return [
+    'routing' => [
+        'routes' => Route::getRoutes(),
+        // 'cache' => 'data/cache/route.cache'
+    ],
+    // ...
+]
+```
+
 ## Controller
 
 Each controller in SimpleMvc implements the `ControllerInterface`, as follows:
@@ -198,35 +231,34 @@ All the HTTP requests pass from this file, that is called **Front controller**.
 The front controller is as follows:
 
 ```php
-chdir(dirname(__DIR__));
-require 'vendor/autoload.php';
-
 use DI\ContainerBuilder;
 use SimpleMVC\App;
 use SimpleMVC\Emitter\SapiEmitter;
 
 $builder = new ContainerBuilder();
 $builder->addDefinitions('config/container.php');
-$container = $builder->build();
 
-// Store the configuration file in the container
-$config = require 'config/app.php';
-$container->set('config', $config);
-
-$app = new App($container, $config);
+$app = new App($builder->build());
 $app->bootstrap();
-$response = $app->dispatch(); // PSR-7 response
-
+$request = App::buildRequestFromGlobals();
+$response = $app->dispatch($request);
 SapiEmitter::emit($response);
 ```
 
-In this file we build the CI container, reading from the [config/container.php](config/container.php) file
-and we pass this container to the [SimpleMVC\App]() class, along with the [config/app.php](config/app.php)
-configuration file.
+In this file we build the DI container, reading from the [config/container.php](config/container.php)
+file and we inject it to the [SimpleMVC\App]() class.
 
-Then, we execute the `bootstrap` function if we have specified a callable in the `bootstrap` field of `config/app.php`.
-Last, we execute the `dispatch` function that performs the dispatch of the Controller using the `config/route.php`
-configuration.
+The application configuration is stored in the DI container with the `config` key.
+
+We execute the `bootstrap` function. This is a special function used to initialize the application status,
+e.g [starting the PHP session](https://github.com/simplemvc/skeleton/blob/main/config/config.php#L40-L42). 
+
+After, we build the PSR-7 HTTP request using `App::buildRequestFromGlobals()` from
+the PHP global variables $_GET, $_POST, $_SERVER, etc.
+
+Then, we execute the `dispatch` function that executes the Controller(s) according to the route.
+
+Finally, we render the PSR-7 response to the standard output using the `SapiEmitter`.
 
 ### Copyright
 
