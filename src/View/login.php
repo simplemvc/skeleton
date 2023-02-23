@@ -3,7 +3,7 @@
 <main class="form-signin">
   <form method="POST" action="<?= $this->e($login_url) ?>">
     <img class="mb-4" src="/img/logo.png" alt="" width="100%">
-
+    <p>User: <i>admin</i>, Password: <i>supersecret</i></p>
     <div class="form-floating">
       <input type="text" class="form-control" id="username" name="username" placeholder="Username">
       <label for="username">Username</label>
