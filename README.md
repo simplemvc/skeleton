@@ -15,7 +15,7 @@ This will create a `skeleton` folder containing a basic web application.
 You can execute the application using the PHP internal web server, as follows:
 
 ```
-php -S 0.0.0.0:8080 -t public
+composer run-script start
 ```
 
 The application will be executed at [http://localhost:8080](http://localhost:8080).
@@ -25,43 +25,80 @@ as template engine.
 
 ## Configuration
 
-The application is configured using the ([config/app.php](config/app.php)) file:
+The application is configured using the ([config/config.php](config/config.php)) file:
 
 ```php
+use App\Config\Route;
+use Monolog\Logger;
+use Psr\Container\ContainerInterface;
+
 return [
     'routing' => [
-        'routes' => require 'route.php'
+        'routes' => Route::getRoutes(),
+        'cache' => 'data/cache/route.cache'
     ],
-    'container' => require 'container.php',
-    'error' => [
-        '404' => Error404::class,
-        '405' => Error405::class
+    'database' => [
+        'pdo_dsn' => 'sqlite:data/db.sqlite',
+    ],
+    'view' => [
+        'path' => 'src/View',
+        'folders' => [
+            'admin' => 'src/View/admin'
+        ],
+    ],
+    'logger' => [
+        'name' => 'app',
+        'path' => sprintf("data/log/%s.log", date("Y_m_d")),
+        'level' => Logger::DEBUG,
+    ],
+    // Basic authentication
+    'authentication' => [
+        'username' => 'test',
+        'password' => '1234567890'
     ],
     'bootstrap' => function(ContainerInterface $c) {
-       // Put here the code to bootstrap, if any
-       // e.g. a database or ORM initialization
+       session_start();
     }
 ];
 ```
-Each section contains the configuration of the routing system (`route`), the DI Container (`container`),
-the error based on HTTP status code (`error`) and the `boostrap`, if present.
+Each section contains the configuration of the routing system (`routing`), 
+database (`database`), etc.
 
 ## Routing system
 
-The routing system uses a PHP configuration file as follows ([config/route.php](config/route.php)):
+The routing system uses a Route class as follows ([config/Route.php](config/Route.php)):
 
 ```php
-use SimpleMVC\Controller;
+class Route
+{
+    public const LOGIN = '/login';
+    public const LOGOUT = '/logout';
+    public const DASHBOARD = '/admin/users';
 
-return [
-    [ 'GET', '/', Controller\Home::class ],
-    [ 'GET', '/hello[/{name}]', Controller\Hello::class ],
-    [ 'GET', '/secret', [ BasicAuth::class, Controller\Secret::class ]]
-];
+    public static function getRoutes(): array
+    {
+        return [
+            [ 'GET', '/', Controller\Home::class ],
+            [ 'GET', '/hello[/{name}]', Controller\Hello::class ],
+            [ ['GET', 'POST'], self::LOGIN, Controller\Login::class ],
+            [ 'GET', self::LOGOUT, Controller\Logout::class ],
+            [ 'GET', '/basic-auth', [BasicAuth::class, Controller\Secret::class]],
+            // Admin section
+            [ 'GET', '/admin/users[/{id}]', [Controller\AuthSession::class, Admin\Users\Read::class]],
+            [ 'POST', '/admin/users/{id}', [Controller\AuthSession::class, Admin\Users\Update::class]],
+            [ 'POST', '/admin/users', [Controller\AuthSession::class, Admin\Users\Create::class]],
+            [ 'DELETE', '/admin/users/{id}', [Controller\AuthSession::class, Admin\Users\Delete::class]],
+        ];
+    }
+}
 ```
-
-A route is an element of the array with an HTTP method, a URL and a Controller class to be executed. 
+THis class contains onlya static method that returns the list of routes as array.
+A route is an element of the array with an HTTP method, a URL and a controller class to be executed. 
 The URL can be specified using the FastRoute [syntax](https://github.com/nikic/FastRoute/blob/master/README.md).
+The controller class can be specified also with a pipeline of controllers, as array.
+
+For instance, the `GET /admin/users[/{id}]` route has a pipeline with `[Controller\AuthSession, Admin\Users\Read]`.
+The controllers in the pipeline are executed in order, that means first `Controller\AuthSession` and last `Admin\Users\Read`.
 
 ## Controller
 
@@ -80,12 +117,11 @@ interface ControllerInterface
 ```
 
 The `execute()` function accepts two parameters, the `$request` and the optional `$response`.
-These are [PSR-7](https://www.php-fig.org/psr/psr-7/) HTTP request and response.
-The request is mandatory to execute a controller. The response is typically used when you need to
-execute a pipeline of multiple controllers, where you may want to pass the response from one controller
-to another.
+These are [PSR-7](https://www.php-fig.org/psr/psr-7/) HTTP request and response objects.
+The response is typically used when you need to execute a pipeline of multiple controllers, where
+you may want to pass the response from one controller to another.
 
-The return of the `execute()` function can be null (?) or a PSR-7 Response. 
+The return of the `execute()` function is a PSR-7 Response. 
 For instance, the `Home` controller reported in the skeleton application is as follows:
 
 ```php
@@ -95,13 +131,11 @@ use League\Plates\Engine;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use SimpleMVC\Controller\ControllerInterface;
 
 class Home implements ControllerInterface
 {
-    /**
-     * @var Engine
-     */
-    protected $plates;
+    protected Engine $plates;
 
     public function __construct(Engine $plates)
     {
@@ -135,7 +169,7 @@ use SimpleMVC\Controller;
 
 return [
     // ...
-    [ 'GET', '/secret', [ BasicAuth::class, Controller\Secret::class ]]
+    [ 'GET', '/basic-auth', [ BasicAuth::class, Controller\Secret::class ]]
 ];
 ```
 
@@ -143,7 +177,7 @@ The third element of the array is an array itself, containing the list of contro
 The order of execution is the same of the array, that means `BasicAuth` will be executed first
 and `Secret` after.
 
-If you want, you can halt the execution flow of SimpleMVC returning a [HaltResponse](https://github.com/simplemvc/framework/blob/main/src/Response/HaltResponse.php).
+If you want, you can halt the execution flow of SimpleMVC returning a [HaltResponse](https://github.com/simplemvc/framework/blob/main/src/Response/HaltResponse.php) object.
 This response is just an empty class that extends a PSR-7 request to inform SimpleMVC to **stop the execution**.
 
 SimpleMVC provideds a [Basic Access Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication)
